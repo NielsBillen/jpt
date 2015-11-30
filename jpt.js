@@ -1,6 +1,6 @@
 var Jpt = Jpt || {};
 
-/*global console*/
+/*global console, Geometry*/
 
 /*-----------------------------------------------------------------------------
  *
@@ -97,15 +97,15 @@ Jpt.Renderer = function () {
     this.ctx = this.canvas.getContext("2d");
     this.width = this.canvas.width;
     this.height = this.canvas.height;
-    this.camera = new Jpt.Camera(new Jpt.Vec(0, 0, 0), new Jpt.Vec(0, 0, 1).norm(), new Jpt.Vec(0, 1, 0), this.width, this.height, 0.5 * Math.PI);
+    this.camera = new Jpt.Camera(new Geometry.Vector(0, 0, 0), new Geometry.Vector(0, 0, 1).norm(), new Geometry.Vector(0, 1, 0), this.width, this.height, 0.5 * Math.PI);
     
     this.scene = new Jpt.Scene();
     
-    this.scene.add(new Jpt.Sphere(new Jpt.Vec(0, 0, 10), 5));
-    this.scene.add(new Jpt.Sphere(new Jpt.Vec(4, -4, 12), 4));
-    this.scene.add(new Jpt.Sphere(new Jpt.Vec(-4, -4, 12), 4));
-    this.scene.add(new Jpt.Sphere(new Jpt.Vec(4, 4, 12), 4));
-    this.scene.add(new Jpt.Sphere(new Jpt.Vec(-4, 4, 12), 4));
+    this.scene.add(new Jpt.Sphere(new Geometry.Vector(0, 0, 10), 5));
+    this.scene.add(new Jpt.Sphere(new Geometry.Vector(4, -4, 12), 4));
+    this.scene.add(new Jpt.Sphere(new Geometry.Vector(-4, -4, 12), 4));
+    this.scene.add(new Jpt.Sphere(new Geometry.Vector(4, 4, 12), 4));
+    this.scene.add(new Jpt.Sphere(new Geometry.Vector(-4, 4, 12), 4));
 };
 
 Jpt.Renderer.prototype.start = function () {
