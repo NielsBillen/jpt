@@ -1,6 +1,10 @@
-/*global Geometry*/
+/*global console, Spectrum, Geometry, Jpt*/
 
-
+/*-----------------------------------------------------------------------------
+ *
+ * Definition of the materials
+ *
+ *---------------------------------------------------------------------------*/
 
 var BSDF = (function () {
     "use strict";
@@ -18,9 +22,13 @@ var BSDF = (function () {
     };
     
     my.Diffuse.prototype.f = function (vIn, vOut, isect) {
-        return new Geometry.Vec(this.red * INV_TWOPI,
-                           this.green * INV_TWOPI,
-                           this.blue * INV_TWOPI);
+        return new Spectrum.RGB(this.red * INV_TWOPI,
+                                this.green * INV_TWOPI,
+                                this.blue * INV_TWOPI);
+    };
+    
+    my.Diffuse.prototype.toString = function () {
+        return "diffuse (" + this.red + ", " + this.green + ", " + this.blue + ")";
     };
     
     return my;

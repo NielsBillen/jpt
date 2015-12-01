@@ -125,12 +125,36 @@ var Geometry = (function () {
         return this.x + " " + this.y + " " + this.z;
     };
     
+    /*-----------------------------------------------------------------------------
+     *
+     * Definition of an intersection object
+     *
+     *---------------------------------------------------------------------------*/
+    
+    my.Intersection = function () {
+        this.p = null;
+        this.n = null;
+        this.shape = null;
+        this.t = null;
+        this.bsdf = null;
+    };
+    
+    /*-----------------------------------------------------------------------------
+     *
+     * Definition of a ray object
+     *
+     *---------------------------------------------------------------------------*/
+    
+    my.Ray = function (origin, direction) {
+        this.origin = origin;
+        this.direction = direction;
+        this.mint = 0;
+        this.maxt = Number.POSITIVE_INFINITY;
+    };
+
+    my.Ray.prototype.toString = function () {
+        return "ray from " + this.origin.toString() + " to " + this.direction.toString();
+    };
+    
     return my;
 }());
-
-console.log(Geometry);
-
-
-var p1 = new Geometry.Point(1, 2, 3);
-var p2 = new Geometry.Point(2, 3, 4);
-console.log(Geometry.Interpolate(p1, p2, 0.5));

@@ -36,7 +36,8 @@ header {
 }
 
 article {
-    text-align: left;
+    text-align: center;
+    margin: 1rem;
 }
 
 #jpt-canvas {
