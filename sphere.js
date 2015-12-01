@@ -8,12 +8,12 @@ var Jpt = Jpt || {};
  *
  *---------------------------------------------------------------------------*/
 
-Jpt.Sphere = function (origin, radius, emission, color) {
+Jpt.Sphere = function (origin, radius, bsdf, emission) {
     "use strict";
     this.origin = origin;
     this.radius = radius;
     this.emission = emission;
-    this.color = color;
+    this.bsdf = bsdf;
 };
 
 Jpt.Sphere.prototype.intersect = function (ray, intersection) {
@@ -58,6 +58,7 @@ Jpt.Sphere.prototype.intersect = function (ray, intersection) {
                 intersection.n = intersection.p.subtract(this.origin).norm();
                 intersection.shape = this;
                 intersection.t = t;
+                intersection.bsdf = this.bsdf;
             }
             return true;
         }

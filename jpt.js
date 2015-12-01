@@ -14,6 +14,7 @@ Jpt.Intersection = function () {
     this.n = null;
     this.shape = null;
     this.t = null;
+    this.bsdf = null;
 };
 
 /*-----------------------------------------------------------------------------
@@ -101,11 +102,22 @@ Jpt.Renderer = function () {
     
     this.scene = new Jpt.Scene();
     
-    this.scene.add(new Jpt.Sphere(new Jpt.Vec(0, 0, 10), 5));
-    this.scene.add(new Jpt.Sphere(new Jpt.Vec(4, -4, 12), 4));
-    this.scene.add(new Jpt.Sphere(new Jpt.Vec(-4, -4, 12), 4));
-    this.scene.add(new Jpt.Sphere(new Jpt.Vec(4, 4, 12), 4));
-    this.scene.add(new Jpt.Sphere(new Jpt.Vec(-4, 4, 12), 4));
+    var redMaterial;
+    
+    redMaterial = new Jpt.BRDF.Diffuse(1, 0, 0);
+    console.log(redMaterial.toString());
+    
+    this.scene.add(new Jpt.Sphere(new Jpt.Vec(0, 0, 10), 5, redMaterial));
+    this.scene.add(new Jpt.Sphere(new Jpt.Vec(4, -4, 12), 4, redMaterial));
+    this.scene.add(new Jpt.Sphere(new Jpt.Vec(-4, -4, 12), 4, redMaterial));
+    this.scene.add(new Jpt.Sphere(new Jpt.Vec(4, 4, 12), 4, redMaterial));
+    this.scene.add(new Jpt.Sphere(new Jpt.Vec(-4, 4, 12), 4, redMaterial));
+};
+
+Jpt.Renderer.prototype.gammaCorrect = function (value) {
+    "use strict";
+    
+    return Math.max(0, Math.min(255, Math.floor(255.0 * Math.pow(value, 1.0 / 2.2))));
 };
 
 Jpt.Renderer.prototype.start = function () {
@@ -113,7 +125,7 @@ Jpt.Renderer.prototype.start = function () {
     
     var x, y, s, spp, ray, color, c, isect, hit;
     
-    spp = 1;
+    spp = 4;
     
     if (!this.rendered) {
         this.rendered = true;
@@ -121,22 +133,24 @@ Jpt.Renderer.prototype.start = function () {
 
         for (y = 0; y < this.height; y += 1) {
             for (x = 0; x < this.width; x += 1) {
-                color = 0;
+                color = new Jpt.RGB(0, 0, 0);
                 hit = false;
                 for (s = 0; s < spp; s += 1) {
                     ray = this.camera.generateRay(x + Math.random(), y + Math.random());
                     
                     if (this.scene.intersect(ray, isect)) {
-                        c = -ray.direction.norm().dot(isect.n);
+                        c = isect.bsdf.f(-ray.direction.norm(), -ray.direction.norm()).scale(-ray.direction.dot(isect.n));
                         hit = true;
-                        if (c > 0) {
-                            color += c;
+                        if (!c.isBlack()) {
+                            color = color.add(c);
                         }
                     }
                 }
                 
-                color = Math.floor(255.0 * color / spp);
-                this.ctx.fillStyle = "rgba(" + color + ", " + color + ", " + (hit ? 255 : 0) + ", 1.0)";
+                
+                color = color.divide(spp);
+                
+                this.ctx.fillStyle = "rgba(" + this.gammaCorrect(color.red) + ", " + this.gammaCorrect(color.green) + ", " + this.gammaCorrect(color.blue) + ", 1.0)";
                 this.ctx.fillRect(x, y, 1, 1);
             }
         }
