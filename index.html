@@ -4,11 +4,20 @@
         <link rel = "stylesheet" type = "text/css" href = "jpt.css"></link>
     </head>
     <body>
-        <header>Javascript Path Tracer</header>
-        <canvas id = "jpt-canvas" width = "640" height = "640">
-            Your browser does not support the canvas element.
-        </canvas>
-        <button onclick="renderer.start();">Render</button>
+        <header>
+            Javascript Path Tracer
+        </header>
+        <div id = "content">
+            <article>
+                A path tracer implemented in Javascript to solve the Global Illumination problem.
+            </article>
+            <canvas id = "jpt-canvas" width = "640" height = "640">
+                Your browser does not support the canvas element.
+            </canvas>
+            <button onclick="renderer.start();">
+                Render
+            </button>
+        </div>
         
         <script src = "geometry.js"></script>
         <script src = "ray.js"></script>

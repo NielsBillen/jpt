@@ -1,3 +1,7 @@
+/*global Geometry*/
+
+
+
 var BSDF = (function () {
     "use strict";
     
