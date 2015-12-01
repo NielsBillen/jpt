@@ -1,6 +1,4 @@
-var Jpt = Jpt || {};
-
-/*global console*/
+/*global console, Geometry, Jpt*/
 
 /*-----------------------------------------------------------------------------
  *
@@ -8,35 +6,30 @@ var Jpt = Jpt || {};
  *
  *---------------------------------------------------------------------------*/
 
-Jpt.BRDF = Jpt.BRDF || {};
-Jpt.BRDF.INV_PI = 1.0 / Math.PI;
-Jpt.BRDF.INV_TWO_PI = 0.5 * Jpt.BRDF.INV_PI;
-
-/*
- * Creates a new diffuse bidirectional reflection distribution function
- *
- * @param red   the red color component (between 0 and 1)
- * @param green the red color component (between 0 and 1)
- * @param blue  the red color component (between 0 and 1)
- */
-Jpt.BRDF.Diffuse = function (red, green, blue) {
+var BSDF = (function () {
     "use strict";
     
-    this.red = red;
-    this.green = green;
-    this.blue = blue;
-};
-
-Jpt.BRDF.Diffuse.prototype.f = function () {
-    "use strict";
+    // private variables
+    var my = {},
+        INV_PI = 1.0 / Math.PI,
+        INV_TWOPI = 0.5 * INV_PI;
     
-    return new Jpt.RGB(this.red * Jpt.BRDF.INV_TWO_PI,
-                       this.green * Jpt.BRDF.INV_TWO_PI,
-                       this.blue * Jpt.BRDF.INV_TWO_PI);
-};
-
-Jpt.BRDF.Diffuse.prototype.toString = function () {
-    "use strict";
+    // create a diffuse class
+    my.Diffuse = function Diffuse(red, green, blue) {
+        this.red = red;
+        this.green = green;
+        this.blue = blue;
+    };
     
-    return "diffuse (" + this.red + ", " + this.green + ", " + this.blue + ")";
-};
+    my.Diffuse.prototype.f = function (vIn, vOut, isect) {
+        return new Jpt.RGB(this.red * INV_TWOPI,
+                           this.green * INV_TWOPI,
+                           this.blue * INV_TWOPI);
+    };
+    
+    my.Diffuse.prototype.toString = function () {
+        return "diffuse (" + this.red + ", " + this.green + ", " + this.blue + ")";
+    };
+    
+    return my;
+}());

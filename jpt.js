@@ -1,6 +1,6 @@
 var Jpt = Jpt || {};
 
-/*global console*/
+/*global console, Geometry, BSDF*/
 
 /*-----------------------------------------------------------------------------
  *
@@ -98,26 +98,23 @@ Jpt.Renderer = function () {
     this.ctx = this.canvas.getContext("2d");
     this.width = this.canvas.width;
     this.height = this.canvas.height;
-    this.camera = new Jpt.Camera(new Jpt.Vec(0, 0, 0), new Jpt.Vec(0, 0, 1).norm(), new Jpt.Vec(0, 1, 0), this.width, this.height, 0.5 * Math.PI);
-    
+    this.camera = new Jpt.Camera(new Geometry.Vector(0, 0, 0), new Geometry.Vector(0, 0, 1).norm(), new Geometry.Vector(0, 1, 0), this.width, this.height, 0.5 * Math.PI);
     this.scene = new Jpt.Scene();
     
-    var redMaterial;
+    var red, blue;
+    red = new BSDF.Diffuse(1, 0, 0);
+    blue = new BSDF.Diffuse(0, 0, 1);
     
-    redMaterial = new Jpt.BRDF.Diffuse(1, 0, 0);
-    console.log(redMaterial.toString());
-    
-    this.scene.add(new Jpt.Sphere(new Jpt.Vec(0, 0, 10), 5, redMaterial));
-    this.scene.add(new Jpt.Sphere(new Jpt.Vec(4, -4, 12), 4, redMaterial));
-    this.scene.add(new Jpt.Sphere(new Jpt.Vec(-4, -4, 12), 4, redMaterial));
-    this.scene.add(new Jpt.Sphere(new Jpt.Vec(4, 4, 12), 4, redMaterial));
-    this.scene.add(new Jpt.Sphere(new Jpt.Vec(-4, 4, 12), 4, redMaterial));
+    this.scene.add(new Jpt.Sphere(new Geometry.Vector(0, 0, 10), 5, red));
+    this.scene.add(new Jpt.Sphere(new Geometry.Vector(4, -4, 12), 4, blue));
+    this.scene.add(new Jpt.Sphere(new Geometry.Vector(-4, -4, 12), 4, blue));
+    this.scene.add(new Jpt.Sphere(new Geometry.Vector(4, 4, 12), 4, blue));
+    this.scene.add(new Jpt.Sphere(new Geometry.Vector(-4, 4, 12), 4, blue));
 };
 
 Jpt.Renderer.prototype.gammaCorrect = function (value) {
     "use strict";
-    
-    return Math.max(0, Math.min(255, Math.floor(255.0 * Math.pow(value, 1.0 / 2.2))));
+    return Math.max(0, Math.min(1, Math.pow(value, 1.0 / 2.2)));
 };
 
 Jpt.Renderer.prototype.start = function () {
@@ -149,7 +146,7 @@ Jpt.Renderer.prototype.start = function () {
                 
                 
                 color = color.divide(spp);
-                
+                console.log(color.toString);
                 this.ctx.fillStyle = "rgba(" + this.gammaCorrect(color.red) + ", " + this.gammaCorrect(color.green) + ", " + this.gammaCorrect(color.blue) + ", 1.0)";
                 this.ctx.fillRect(x, y, 1, 1);
             }
